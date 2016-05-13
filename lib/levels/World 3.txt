@@ -1,0 +1,26 @@
+World 3
+1 53 107 160 210
+264
+wells
+Wells1.png Wells2.png Wells3.png Wells4.png Wells5.png
+WellsQ.png
+waroftheworlds
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                                                                                                                                      S
+S                                                                                                                                                        SSSSSSSSSSSSS         SSSSSS             SSSSSS                                                               S
+S                                              S                                                                                                        S             S       S      S           S     WW                                                              S
+S              SSSS     SSSS                 S  S                       S                    S                                                         S               22SSS22        22SS2S2SS22     WWWW                                                             S
+S          SSSS    S   S    SSSS           S     S                    S   S                S   S                                                      S                                              WWWWWW                                            L               S
+S       SSS                     SSSS     S        S                 S       S            S       S                SSSSSSS      SSSSSSS   S   S       S                                              WWWWWWWW                   SS SS SS SS SS S   S SS SS SS SS         
+S      SS            S            SS            L  S      2 S 2 S 2   22222    2 S 2 S 2   22222   2  L          S S S S 222222 S S S S            LS                                              WWWWWWWWWWL                                                          
+SASSSSSSSSSSSSSSWWWWWSWWWWWSSSSSSSSSSSSSSSSSSSSSSSSSSASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSWWWWWWWWWSSSSSSSSSSSSASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSASSSSSSSSSSSSSWWWWWWWWW           WWWWWWWWWSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS         SSSSSSSSSSSSSSSSSSS
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111       11111111111111111111
+1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111     111111111111111111111

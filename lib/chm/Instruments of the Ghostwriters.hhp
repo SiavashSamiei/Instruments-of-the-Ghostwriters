@@ -1,0 +1,23 @@
+[OPTIONS]
+Auto TOC=9
+Compatibility=1.1 or later
+Compiled file=Instruments of the Ghostwriters.chm
+Contents file=Table of Contents.hhc
+Default topic=index.html
+Display compile progress=No
+Index file=Index.hhk
+Language=0x1009 English (Canada)
+Title=Instruments of the Ghostwriters Help
+
+
+[FILES]
+index.html
+about.html
+instructions.html
+requirements.html
+references.html
+screenshots.html
+rules.html
+
+[INFOTYPES]
+

@@ -1,0 +1,26 @@
+World 5
+1 53 106 158 211
+264
+tolkien
+Tolkein1.png Tolkein2.png Tolkein3.png Tolkein4.png Tolkein5.png
+TolkeinQ.png
+darkness
+1                                                                                                                                                                                                                                                                      2
+1                                                                                                                                                                                                                                                                      2
+1                                                                                                                                                                                                                                                                  2   2
+1                                                                                                                                                                                                                                                                 12   2
+1                                                                                                                                  1  1  1                                                                                                                       1 2   2
+1                                                                                                                           1              1                                                                                                                   1   2   2
+1                                                                                                                       1       1            1                                                                                                                1    2   2
+1                                                                                                                       1                                                                                                                                    1     22 22
+1                                                               1     1                                                  1                                                                                                                                  1      2   2
+1                                                             1                                                           1                   122212221                                                                                                   1        2 L 2
+1                                                           1                        1221221                                    1                       1                     1                      1             L                       1            1          2 1 2
+1          1 1     1                1     1 1             1                                                                   1                          1                 1     1                1     1                  111           1            1            2   2
+1                1   1            1   1                 1                          1        22221112222                     1                             1             1           1          1           1             111           1            1              2   2
+1    1 1 2 2   1           11            1   2 2 1 1   1                   1  2  1                       1  1   2     2    1                                1     12 21                 12  21                12 21    111           1            1                2    
+1  1                                                 L                                                    L  1     1     1                                   1L1    1                     1                     1    111          1          1221                  2    
+1ABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBABBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB2111
+11BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB11
+111BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB111
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111

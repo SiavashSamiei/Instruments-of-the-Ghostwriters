@@ -1,0 +1,694 @@
+package game;
+
+import java.awt.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.ImageIO;
+import java.util.*;
+import blocks.*;
+import java.awt.event.*;
+
+
+/**
+ * This is the Game class of the program. This class creates an instance of Canvas with the game drawn out on it. This class passes instences of Player and Level. 
+ * <p>
+ * <b> Instance Variables </b>
+ * <p>
+ * <b> background </b> Image, the background image for the game.
+ * <p>
+ * <b> pauseButton </b> Image, the pauseButton image.
+ * <p>
+ * <b> textures </b>  Image[][],  array of block textures.
+ * <p>
+ * <b> player </b> Image [],  the Image array of the player in different movement states.
+ * <p>
+ * <b> text </b> Image[], array of the text blocks.
+ * <p>
+ * <b> t </b>  Timer, the instance of the timer class.
+ * <p> 
+ * <b> level </b> Level, the instance of the Level class.
+ * <p>
+ * <b> p </b> Player, the instance of the Player class.
+ * <p>
+ * <b> bs </b> BufferStrategy, the bufferstrategy for the double buffereing of the canvas.
+ * <p>
+ * <b> stop </b> Boolean, variable to stop the thread.
+ * <p>
+ * <b> FPS </b> Int, the frame refresh rate.
+ * <p>
+ * <b> pX </b> Int, previous x position of Player.
+ * <p>
+ * <b> pStart </b> Int, previous start position of Player.
+ * <p>
+ * <b> pause </b> Boolean, used pause and unpause the game.
+ * <p>
+ * <b> timeFont </b> Font, font for timer.
+ * <p>
+ * <b> speechFont </b> Font, font for the text said by the author.
+ * <p>
+ * <b> end </b> Boolean, varibale to end the game.
+ * <p>
+ * <b> keyLeft </b> Keys for left movement.
+ * <p>
+ * <b> keyRight </b> Keys for right movement.
+ * <p> 
+ * <b> keyUp </b> Keys for upwards movement.
+ * <p>
+ * <b> checkpointReached </b> Int, the current checkpoint the player has set as their respawn point. 
+ * <p>
+ * <b> letterReached </b> Int,  most current letter reached.
+ * <p>
+ * <b> letters </b> Boolean [], array storing the number the letters reached and which letters have been reached.
+ * <p>
+ * <p>
+ * <b>Total time spent:</b>
+ * <p>
+ * Siavash Samiei: 25 hours
+ * <p>
+ * Justin Pu: 40 hours
+ * 
+ * @author Justin Pu and Siavash Samiei May 24, 2015 
+ * @version 7 06.08.15
+ * 
+ */
+public class Game extends Canvas implements Runnable, KeyListener {
+  private static Image background;
+  private Image pauseButton;
+  private static Image[][] textures;
+  private static Image[] player;
+  private static Image[] text;
+  private Timer t;
+  private Level level;
+  private Player p;
+  private BufferStrategy bs;
+  private boolean stop;
+  private final static int FPS = 30;
+  private int pX, pStart; 
+  private boolean pause;
+  private Font timeFont = new Font("Courier New", Font.BOLD, 20);
+  private Font speechFont = new Font("Harrington", Font.BOLD + Font.ITALIC, 24);
+  private boolean end; 
+  private boolean keyLeft;
+  private boolean keyRight;
+  private boolean keyUp;
+  private int checkpointReached = 0;
+  private int letterReached;
+  private boolean[] letters;
+  
+  
+  /**
+   * Constructor, initializes game textures and variables to create a complete instance of game.
+   * <p>
+   * May 30 - Justin Pu
+   * @param level the level for this game to load
+   * @param p the p attempting the level
+   * @author Justin Pu May 24, 2015
+   */
+  public Game(Level level, Player p) {
+    letters = new boolean[5];
+    Arrays.fill(letters, false);
+    this.level = level;
+    this.p = p;
+    // Loading images
+    try {
+      pauseButton = ImageIO.read(new File(Paths.GUI + "pause.png"));
+      
+      textures = new Image[][] {
+        new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "dirt1.png")), // 0
+          ImageIO.read(new File(Paths.TEXTURES + "dirt2.png")),
+          ImageIO.read(new File(Paths.TEXTURES + "dirt3.png")),
+          ImageIO.read(new File(Paths.TEXTURES + "dirt4.png"))},
+            new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "stone1.png")),    // 1
+              ImageIO.read(new File(Paths.TEXTURES + "stone2.png"))},
+                new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "spikes.png"))},   // 2
+                  new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "ice.png"))},    // 3
+                    new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "water.png"))},  // 4
+                      new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "gold_block.png"))},   // 5
+                        new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "grass1.png")),    // 6
+                          ImageIO.read(new File(Paths.TEXTURES + "grass2.png")),
+                          ImageIO.read(new File(Paths.TEXTURES + "grass3.png")),
+                          ImageIO.read(new File(Paths.TEXTURES + "grass4.png"))},
+                            new Image[] { ImageIO.read(new File(Paths.TEXTURES + "coal_ore.png")), // 7
+                              ImageIO.read(new File(Paths.TEXTURES + "iron_ore.png")),
+                              ImageIO.read(new File(Paths.TEXTURES + "diamond_ore.png")),
+                              ImageIO.read(new File(Paths.TEXTURES + "gold_ore.png"))},
+                                new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "letter.png"))}, // 8
+                                  new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "lava.png"))}, // 9
+                                    new Image[] {   ImageIO.read(new File(Paths.TEXTURES + "planks.png"))} // 10
+                                    // 11
+      };
+      
+      text = new Image[26];
+      for (char c = 'a'; c <= 'z' ; c++) {
+        text[c - 97] = ImageIO.read(new File(Paths.TEXT + c + ".png"));
+      }
+      background = ImageIO.read(new File(Paths.TEXTURES + "background_" + level.getName().substring(6) + ".png"));
+      
+      player = new Image[4];
+      player[0] = ImageIO.read(new File(Paths.PLAYER + p.getColour () + "s.png")).getScaledInstance(48, 64, Image.SCALE_FAST); // Standing
+      player[1] = ImageIO.read(new File(Paths.PLAYER + p.getColour () + "m.png")).getScaledInstance(48, 64, Image.SCALE_FAST); // Running
+      player[2] = ImageIO.read(new File(Paths.PLAYER + p.getColour () + "j.png")).getScaledInstance(48, 64, Image.SCALE_FAST); // Jumping
+      player [3] = ImageIO.read(new File(Paths.PLAYER + "dead.png")).getScaledInstance (48, 64, Image.SCALE_FAST);
+      //temp
+      p.setY(224);
+      p.setFps(FPS);
+      
+    } catch(IOException e) { System.out.println ("Failed"); }
+    
+    t = new Timer();
+  }
+  
+  /**
+   * Initializing some components.
+   * <p>
+   * @author Justin Pu May 24, 2015
+   */
+  public void init() {
+    createBufferStrategy(2);
+  }
+  
+  /**
+   * Draws the game scape by reading in different block textures and the level. 
+   * <p>
+   * May 26 - Justin Pu
+   * May 30 - Justin Pu and Siavash Samiei
+   * May 31 - Justin Pu
+   * @author Justin Pu May 24
+   */
+  private void draw() {
+    bs = getBufferStrategy();
+    //int start = (p.getX() > 100) ? (int) p.getX() - 100 : 0;
+    int start = pStart;
+    if (start < 100)
+      start = 100;
+    if (p.getX() - start < 300)
+      start = (int)(p.getX() - 300);
+    if (start < 0)
+      start = 0;
+    if (p.getX() - start > 500)
+      start = (int)(p.getX() - 500);
+    if (start + 800 > level.getLength() * 32)
+      start = level.getLength() * 32 - 800;
+    
+    Graphics g = bs.getDrawGraphics();
+    
+    g.drawImage(background, 0, 0, null);
+    ArrayList <Block> visible = level.getVisible(start);
+    for (Block b : visible) {
+      g.drawImage(textures[b.getTexture()] [(int) (b.random() * textures[b.getTexture()].length)], b.getX() * 32 - start, b.getY() * 32, null);
+      if (b.getType().equals("text"))
+        g.drawImage(text[((Text)b).getLetter() - 97], b.getX() * 32 - start, b.getY() * 32, null);
+    }
+    if (p.isDead()) {
+      g.drawImage(player[3], (int) p.getX() - 24 - start, (int) p.getY() - 64, null);
+    } else if(p.inAir() && p.getHSpeed() != 0) {
+      if(p.getHSpeed() > 0)
+        g.drawImage(player[2], (int) p.getX() - 24 - start, (int) p.getY() - 64, null);
+      else
+        g.drawImage(player[2], (int) p.getX() + 24 - start, (int) p.getY() - 64, -48, 64, null);
+    } else if(p.getHSpeed() > 0)
+      g.drawImage(player[1], (int) p.getX() - 24 - start, (int) p.getY() - 64, null);
+    else if(p.getHSpeed() < 0)
+      g.drawImage(player[1], (int) p.getX() + 24 - start, (int) p.getY() - 64, -48, 64, null);
+    else
+      g.drawImage(player[0], (int) p.getX() - 24 - start, (int) p.getY() - 64, null);
+    
+    g.drawImage(pauseButton, 5, 5, null);
+    g.setFont(timeFont);
+    g.setColor(Color.WHITE);
+    g.drawString(t.getFormattedTime(), 665, 20);
+    g.drawString("Try #" + Integer.toString(p.getDeaths() + (p.isDead() ? 0 : 1)), 4, 594);
+    
+    bs.show();
+    g.dispose();
+    pStart = start;
+    pX = (int)p.getX();
+  }
+  
+  
+  /**
+   * 
+   * Runs the Thread game and checks all conditions that may occur in the thread.
+   * This includes, horizontal collision, veritcal collison, death, letter collision, 
+   * win conditions, pauses, unpauses, respawing, death animations, overall player movement 
+   * and key controls.
+   * <p>
+   * All edits:
+   * May 27 - Justin Pu
+   * May 30 - Siavash Samiei and Justin Pu
+   * May 31 - Justin Pu and Siavash Samiei
+   * June 4 - Justin Pu - Integrated a timer and edited. 
+   * June 5 - Justin Pu - fixed a collision problem
+   * June 6 - Justin Pu - Disabled movement when respawning.
+   * @author Justin Pu
+   */
+  public void run() {
+    t.start();
+    loop:
+      while(!stop) {
+      if (checkWin()) {
+        end = true;
+        t.pause();
+        animateEnd();
+        InstrumentsOfTheGhostwriters.makePuzzle(this,getNumLetters());
+        break;
+      }
+      if (pause) {
+        while (pause) {
+          try {
+            Thread.sleep(100);
+          } catch(InterruptedException e) { }
+        }
+      }
+      //checkLetterPoint();
+      if (checkLetter()){
+        p.update();
+        draw();
+      }
+      if (checkDead()) {
+        p.update();
+        draw();
+        try { Thread.sleep (500); } catch (InterruptedException e) { }
+        p.die();
+        for (int n = 0; n < 20; n++) {
+          p.setY(p.getY() - 5);
+          draw();
+          try {
+            Thread.sleep(n * 5);
+          } catch(InterruptedException e) { }
+        }
+        
+        p.respawn(level.getCheckpointLocation((checkpointReached <=4) ? checkpointReached:checkpointReached-1));
+        while(!vCollision()) {
+          p.drop();
+          p.update();
+          draw();
+          try {
+            Thread.sleep(1000/FPS);
+          } catch (InterruptedException e) { }
+        }
+        p.setReviving(false);
+        continue loop;
+      }
+      
+      boolean hCollision = hCollision();
+      boolean vCollision = vCollision();
+      if (keyRight) {
+        if (!hCollision)
+          p.hRight();
+      }
+      else if (keyLeft) {
+        if (!hCollision)
+          p.hLeft();
+      }
+      else {
+        p.hDecelerate();
+      }
+      if (p.inAir()) {
+        if (vCollision) {
+          p.update();
+          draw();
+          try {
+            Thread.sleep(1000 / FPS);
+          } catch(InterruptedException e) { }
+        }
+      }
+      if (keyUp) {
+        if(!p.inAir()) {
+          p.jump();
+          vCollision = vCollision();
+          vCollision();
+        }
+      }
+      if(!vCollision && p.inAir())
+        p.drop();
+      p.update();
+      draw();
+      try {
+        Thread.sleep(1000 / FPS);
+      } catch(InterruptedException e) { }
+    }
+  }
+  
+  
+  
+  /**
+   * 
+   * Checks if the player hit a dangerous block or not.
+   * <p>
+   * Modified June 4, 2015 Justin Pu
+   * @author Justin Pu and Siavash Samiei May 31
+   * @return if the player has made contact and has therefore died.
+   */
+  private boolean checkDead() {
+    if (p.getY() > 631)
+      return true;
+    Block[] touching = new Block[] {
+      level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() - 4 : -p.getCollisionX() + 4) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 1) / 32)), // Bottom
+        level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 32) / 32)), // Middle
+        level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 63) / 32)), // Top
+        level.getBlock((int) ((p.getX() + p.getCollisionX() - 3) / 32), (int) ((p.getY() + p.getNextYIncrease())/32)),
+        level.getBlock((int) ((p.getX() - p.getCollisionX() + 4) / 32), (int) ((p.getY() + p.getNextYIncrease())/32)),
+        level.getBlock((int) ((p.getX() + p.getCollisionX() + 1 + p.getHSpeed()/FPS) / 32), (int) ((p.getY() - 64 + p.getNextYIncrease())/32)),
+        level.getBlock((int) ((p.getX() - p.getCollisionX() + p.getHSpeed()/FPS) / 32), (int) ((p.getY() - 64 + p.getNextYIncrease())/32))
+    };
+    for (Block b : touching)
+      if (b != null && (b.getType().equals("obstacle")))
+      return true;
+    return false;
+  }
+  
+  
+  /**
+   * Checks if the player has com in contact witha  letter by checking all blocks around it, if so the letter is picked up and values are change to the Player.
+   * <p>
+   * Checks if the player hit a dangerous block or not.
+   * @author Justin Pu and Siavash Samiei June 1
+   * @return if the player has made contact with a letter and therefore picked it up.
+   */
+  private boolean checkLetter() {
+    Block[] touching = new Block[] {
+      level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 1) / 32)), // Bottom
+        level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 32) / 32)), // Middle
+        level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 63) / 32)), // Top
+        level.getBlock((int) ((p.getX() + p.getCollisionX() + 1 + p.getHSpeed()/FPS) / 32), (int) ((p.getY() + p.getNextYIncrease())/32)),
+        level.getBlock((int) ((p.getX() - p.getCollisionX() + p.getHSpeed()/FPS) / 32), (int) ((p.getY() + p.getNextYIncrease())/32)),
+        level.getBlock((int) ((p.getX() + p.getCollisionX() + 1 + p.getHSpeed()/FPS) / 32), (int) ((p.getY() - 64 + p.getNextYIncrease())/32)),
+        level.getBlock((int) ((p.getX() - p.getCollisionX() + p.getHSpeed()/FPS) / 32), (int) ((p.getY() - 64 + p.getNextYIncrease())/32))
+    };
+    for (Block b : touching){
+      if (b != null && b.getType().equals ("letter")) {
+        letters[letterReached] = true;
+        letterReached++;
+        if (((Letter)b).getLetterNum() == checkpointReached + 1)
+          checkpointReached++;
+        level.remove(b);
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  
+  
+  /**
+   * 
+   * Horizontal Collision -  Checks all the blocks horizontally situated around the player and 
+   * checks if the player has come in contact with that block, based on the type of block 
+   * certain actions are performed to the Player.
+   * <p>
+   * Modified Justin Pu and Siavash Samiei May 30
+   * Modified Justin Pu and Siavash Samiei May 31
+   * May 30 - Justin Pu and Siavash Samiei
+   * @author Siavash Samiei May 28
+   * @return if the palyer has collided horizontally with a block.
+   */
+  private boolean hCollision() {
+    Block b = level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 1) / 32)); // Bottom
+    Block m = level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 32) / 32)); // Middle
+    Block t = level.getBlock((int) ((p.getX() + (p.getHSpeed() > 0 ? p.getCollisionX() : -p.getCollisionX()) + p.getHSpeed()/FPS)/ 32), (int) ((p.getY() - 63) / 32)); // Top
+    if (b != null && !b.getType().equals ("letter") || m != null && !m.getType().equals ("letter") || t != null && !t.getType().equals ("letter")) {
+      p.setX((b == null ? m == null ? t : m : b).getX() * 32 + (p.getHSpeed() > 0 ? (-p.getCollisionX() - 2) : (p.getCollisionX() + 33)));
+      p.setHSpeed(0);
+      return true;
+    }
+    return false;
+  }
+  
+  
+  /**
+   * 
+   * Vertical Collision -  Checks all the blocks vertically situated around the player and 
+   * checks if the player has come in contact with that block, based on the type of block 
+   * certain actions are performed to the Player.
+   * <p>
+   * Modified Justin Pu and Siavash Samiei May 30
+   * Modified Justin Pu and Siavash Samiei May 31
+   * Modified Justin Pu June 2, 2015
+   * Modified Justin Pu June 4, 2015 - reverted
+   * @author Siavash Samiei May 28
+   * @return if the player has collided vertically with a block.
+   */
+  private boolean vCollision() {
+    // Bottom
+    Block right = level.getBlock((int) ((p.getX() + p.getCollisionX() - 3) / 32), (int) ((p.getY() + p.getNextYIncrease())/32));
+    Block left = level.getBlock((int) ((p.getX() - p.getCollisionX() + 4) / 32), (int) ((p.getY() + p.getNextYIncrease())/32));
+    if (left != null && !left.getType().equals ("letter") || right != null && !right.getType().equals ("letter")) {
+      Block b = right == null ? left : right;
+      while(level.getBlock(b.getX(), b.getY() - 1) != null)
+        b = level.getBlock(b.getX(), b.getY() - 1);
+      p.setY(b.getY() * 32);
+      p.setVSpeed(0);
+      p.setInAir(false);
+      return true;
+    }
+    //top
+    right = level.getBlock((int) ((p.getX() + p.getCollisionX() + 1) / 32), (int) ((p.getY() - 64 + p.getNextYIncrease())/32));
+    left = level.getBlock((int) ((p.getX() - p.getCollisionX()) / 32), (int) ((p.getY() - 64 + p.getNextYIncrease())/32));
+    if (left != null && !left.getType().equals ("letter") || right != null && !right.getType().equals ("letter")) {
+      p.setVSpeed(-p.getVSpeed() / 2);
+      return true;
+    }
+    p.setInAir(true);
+    return false;
+  }
+  
+  /**
+   * Stops the thread
+   * <p>
+   * @author Justin Pu May 27
+   */
+  private void stop() {
+    stop = true;
+  }
+  
+  
+  /**
+   * Performs a specific action when a key is pressed.
+   * <p>
+   * May 29 - Justin Pu
+   * @author Justin Pu May 27
+   * 
+   */
+  public void keyPressed (KeyEvent e) {
+    int c = e.getKeyCode();
+    if(c == 65 || c == e.VK_LEFT) {
+      keyLeft = true;
+      if(keyRight || c == e.VK_RIGHT)
+        keyRight = false;
+    } if(c == 68 || c == e.VK_RIGHT) {
+      keyRight = true;
+      if (keyLeft)
+        keyLeft = false;
+    }
+    if(c == 87 || c == 32 || c == e.VK_UP)
+      keyUp = true;
+  }
+  
+  /**
+   * 
+   * Performs a specific action when a key is released. 
+   * <p>
+   * May 29 - Justin Pu
+   * @author Justin Pu May 27
+   */
+  public void keyReleased (KeyEvent e) {
+    int c = e.getKeyCode();
+    if(c == 65 || c == e.VK_LEFT)
+      keyLeft = false;
+    if(c == 68 || c == e.VK_RIGHT)
+      keyRight = false;
+    if(c == 87 || c == 32 || c == e.VK_UP)
+      keyUp = false;
+    if(c == e.VK_ESCAPE) {
+      if (paused()){
+        unpause();
+        InstrumentsOfTheGhostwriters.resumeGame();
+      }
+      else {
+        if(pause())
+          InstrumentsOfTheGhostwriters.newPauseMenu();
+      }
+    }
+    
+  }
+  
+  /*
+   * Overrides the keyTyped method in KeyListener.
+   * <p>
+   * @author Justin Pu May 27, 2015
+   */
+  public void keyTyped(KeyEvent e) { }
+  
+  /**
+   * Pauses the timer.
+   * <p>
+   * @author Justin Pu June 6, 2015.
+   * @return if it is possible to pause.
+   */
+  public boolean pause() {
+    if(!p.isDead() && !p.isReviving() && !end) {
+      pause = true;
+      t.pause();
+      return true;
+    }
+    return false;
+  }
+  
+  /**
+   * Unpauses the timer.
+   * <p>
+   * @author Justin Pu June 6, 2015.
+   */
+  public void unpause() {
+    pause = false;
+    t.unpause();
+  }
+  
+  /**
+   * Accessor method for pause.
+   * <p>
+   * @return whether the game is paused or not.
+   * @author Justin Pu June 6, 2015.
+   */
+  private boolean paused() {
+    return pause;
+  }
+  
+  /**
+   * Gets the number of letters that player has picked up throughout.
+   * <p>
+   * @return the number of letters collected.
+   * @author Justin Pu and Siavash Samiei June 6, 2015.
+   */
+  public int getNumLetters() {
+    int n = 0;
+    for (boolean b : letters) {
+      if (b)
+        n++;
+    }
+    return n;
+  }
+  
+  
+  /**
+   * Checks whether the user has finished the level or not.
+   * <p>
+   * @return whether the user has finished the level
+   * @author Justin Pu June 6, 2015.
+   */
+  private boolean checkWin() {
+    return p.getX() >= level.getLength() * 32;
+  }
+  
+  /**
+   * This method draws the end world that appears once a level has been finished.
+   * <p>
+   * @author Justin Pu June 3, 2015
+   * @param level the desired level for each author
+   * @param author the png file for the author
+   * @param authorX x position of the author
+   * @param authorY y position of the author
+   * @param text the text that the author will say
+   */
+  private void drawEnd(Level level, Image author, int authorX, int authorY, String... text) {
+    bs = getBufferStrategy();
+    
+    Graphics g = bs.getDrawGraphics();
+    
+    g.drawImage(background, 0, 0, null);
+    ArrayList <Block> visible = level.getVisible(0);
+    for (Block b : visible) {
+      g.drawImage(textures[b.getTexture()] [(int) (b.random() * textures[b.getTexture()].length)], b.getX() * 32, b.getY() * 32, null);
+    }
+    g.drawImage(player[0], 88, 415, null);
+    g.drawImage(author, authorX, authorY, null);
+    ((Graphics2D)g).setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    g.setFont(speechFont);
+    g.setColor(Color.WHITE);
+    if (text.length > 0) {
+      g.fillRoundRect(80, 200, 500, 10 + text.length * 30, 10, 10);
+      g.setColor(Color.BLACK);
+      g.drawString(text[0], 100, 220);
+      if (text.length > 1)
+        g.drawString(text[1], 100, 250);
+      if (text.length > 2)
+        g.drawString(text[2], 100, 280);
+    }
+    bs.show();
+    g.dispose();
+  }
+  
+  /**
+   * Animates the author in the end game screen and shows the text that they say.
+   * <p>
+   * @author Justin Pu June 3, 2015
+   */
+  private void animateEnd() {
+    Image authorImg = player[0];
+    Level endLevel = new Level(true);
+    String author = level.getAuthor();
+    ArrayList<String>lines = new ArrayList<String>();
+    
+    try {
+      background = ImageIO.read(new File(Paths.TEXTURES + "end.png"));
+      authorImg = ImageIO.read(new File(Paths.AUTHORS + author + ".png")).getScaledInstance(96, 128, Image.SCALE_FAST);
+      BufferedReader in = new BufferedReader(new FileReader (Paths.AUTHOR_TEXT + author + ".txt"));
+      String s;
+      while ((s = in.readLine()) != null) {
+        lines.add(s);
+      }
+      in.close();
+    } catch(IOException e) { System.out.println("failed"); }
+    
+    drawEnd(endLevel, authorImg, 700, 351);
+    
+    try { Thread.sleep(2000); } catch(InterruptedException e) { }
+    
+    for (int x = 700 ; x > 400 ; x-= 10) {
+      drawEnd(endLevel, authorImg, x, 351);
+      try { Thread.sleep(100); } catch (InterruptedException e) { }
+    }
+    
+    for (int n = 0; n < lines.size(); n += 3) {
+      if (n + 3 > lines.size() + 1)
+        drawEnd(endLevel, authorImg, 400, 351, lines.get(n));
+      else if (n + 3 > lines.size())
+        drawEnd(endLevel, authorImg, 400, 351, lines.get(n), lines.get(n + 1));
+      else
+        drawEnd(endLevel, authorImg, 400, 351, lines.get(n), lines.get(n + 1), lines.get(n + 2));
+      
+      try { Thread.sleep(5000); } catch (InterruptedException e) { }
+    }
+  }
+  
+  /**
+   * 
+   * Returns the time elapsed in minutes.
+   * <p>
+   * @return the time in minutes.
+   * @author Justin Pu June 8, 2015
+   */
+  public double getTime() {
+    return t.getTime() / 60000.;
+  }
+  
+  /**
+   * Returns the Player.
+   * <p>
+   * @return the Player.
+   * @author Siavash Samiei June 8, 2015
+   */
+  public Player getPlayer() {
+    return p;
+  }
+  /**
+   * Returns the Level.
+   * <p>
+   * @return the Level.
+   * @author Siavash Samiei June 8, 2015
+   */
+  public Level getLevel() {
+    return level;
+  }
+}
